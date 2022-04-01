@@ -1,8 +1,6 @@
 set tabstop=4
 set shiftwidth=4
-
-" Use <C-l> for trigger snippet expand.
-imap <C-l> <Plug>(coc-snippets-expand)
+set re=0
 
 set wrap
 set number
@@ -32,12 +30,12 @@ let g:loaded_netrwPlugin = 1
 let g:loaded_netrwSettings = 1
 let g:loaded_netrwFileHandlers = 1
 " 2) Auto start
-augroup coc-explorer
-  if @% == '' || @% == '.'
-    autocmd User CocNvimInit bd
-    autocmd User CocNvimInit CocCommand explorer 
-  endif
-augroup END
+" augroup coc-explorer
+"   if @% == '' || @% == '.'
+"     autocmd User CocNvimInit bd
+"     autocmd User CocNvimInit CocCommand explorer --width 60 --position right 
+" endif
+" augroup END
 "End Confi Coc-Explorer
 "-------------------------------------------------------------------
 filetype off
@@ -53,7 +51,6 @@ set wildmenu
 " CoC Settings
 set hidden
 set nobackup
-set cmdheight=1
 set shortmess+=c
 set nowritebackup
 set updatetime=300
@@ -68,14 +65,16 @@ set smartcase
 set ignorecase
 " End Search Settings
 "-------------------------------------------------------------------
+" FzF
+nnoremap <silent><space>b :Buffers<CR>
+nnoremap <silent><space>f :Files<CR>
+nnoremap <silent><space>ag :Ag<CR>
+nnoremap <silent><space>rg :Rg<CR>
+"Escape edit Mode
+inoremap <silent>ii <Esc> 
 " Commentary KeyMaps
 nnoremap <silent><space>/ :Commentary<CR>
 vnoremap <silent><space>/ :Commentary<CR>
-" Resize Pane
-" nnoremap <silent><C-h> :vertical resize -5 <CR>
-" nnoremap <silent><C-l> :vertical resize +5 <CR>
-" nnoremap <silent><C-k> :resize +5 <CR>
-" nnoremap <silent><C-j> :resize -5 <CR>
 " FormatFile KeyMaps
 nmap <expr> <C-f> &filetype == 'python' ? '<Plug>(coc-format)<cr><bar> :IndentLinesReset 0<cr>':':IndentLinesReset 2 <cr> <bar> :Prettier<cr>'
 "Tabs Options
@@ -94,7 +93,7 @@ nnoremap <silent><C-s> :w <CR>
 "Hide Match /
 nnoremap <silent><CR> :noh <Bar> :let @/ = "" <CR>
 "Coc Explorer
-nnoremap <silent><C-Up> :CocCommand explorer <CR>
+nnoremap <silent><C-Up> :CocCommand explorer --width 60 --position right<CR>
 "Folding
 inoremap <F9> <C-O>za
 nnoremap <F9> za
@@ -103,10 +102,12 @@ vnoremap <F9> zf
 "-------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
 
-Plug 'junegunn/fzf.vim'
-Plug 'honza/vim-snippets'
 Plug 'Yggdroot/indentLine'
+Plug 'honza/vim-snippets'
+Plug 'junegunn/fzf.vim'
+Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -115,10 +116,10 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 let g:coc_global_extensions = ['coc-snippets',
                         \ 'coc-prettier',
                         \ 'coc-pairs',
-                        \ 'coc-html',
                         \ 'coc-explorer',
                         \ 'coc-tsserver',
                         \ 'coc-python',
+                        \ 'coc-emmet',
                         \ 'coc-json',
                         \ 'coc-css',
                         \ 'coc-angular',
@@ -126,12 +127,14 @@ let g:coc_global_extensions = ['coc-snippets',
 call plug#end()
 "-------------------------------------------------------------------
 " CoC Prettier Settings
+let g:prettier#config#tab_width=4
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 " End Prettier Settings
 " Coc Json Settings
 autocmd Filetype json
-        \ let g:indentLine_setConceal = 0 |
-        \ let g:vim_json_syntax_conceal = 0
+        \ setlocal conceallevel = 0 |
+        " \ let g:indentLine_setConceal = 0 |
+        " \ let g:vim_json_syntax_conceal = 0
 " End Coc Json Settings
 "-------------------------------------------------------------------
 " Key Maps Coc
